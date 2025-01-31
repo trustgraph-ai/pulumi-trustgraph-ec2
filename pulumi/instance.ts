@@ -15,7 +15,8 @@ import { address } from './address';
 import { bucket, resourceObject } from './resources';
 
 // Ubuntu server 24.04 LTS in London
-const ami = "ami-053a617c6207ecc7b";
+//const ami = "ami-053a617c6207ecc7b";
+const ami = "ami-00c257e12d6828491";
 
 //const instanceType = "t3a.xlarge";
 

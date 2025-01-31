@@ -1,2 +1,0 @@
-ssh -L 3000:localhost:3000 -L 8888:localhost:8888 -i ssh-private.key ubuntu@18.132.153.17
-
