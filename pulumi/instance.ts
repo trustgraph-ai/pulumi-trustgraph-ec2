@@ -12,6 +12,8 @@ import { prefix, tags, region } from './config';
 import { secGroup } from './security-groups';
 import { address } from './address';
 
+import { bucket, resourceObject } from './resources';
+
 // Ubuntu server 24.04 LTS in London
 const ami = "ami-053a617c6207ecc7b";
 
@@ -23,7 +25,18 @@ const instanceType = "m7i.xlarge";
 
 const template = fs.readFileSync("../init-script.sh").toString();
 
-const userData = btoa(template);
+const userData = pulumi.all(
+    [bucket.bucket, resourceObject.key]
+).apply(
+    ([bucket, key]) =>
+        btoa(
+            template.
+                replace("%BUCKET%", bucket).
+                replace("%KEY%", key)
+        )
+);
+
+userData.apply(console.log);
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +60,28 @@ export const keypair = new aws.ec2.KeyPair(
 
 ////////////////////////////////////////////////////////////////////////////
 
+const inlinePolicy = bucket.bucket.apply(
+    (bucket) =>
+        JSON.stringify({
+            Version: "2012-10-17",
+            Statement: [{
+                Sid: "AllowS3Access",
+                Action: [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:ListBucket",
+                ],
+                Effect: "Allow",
+                Resource: [
+                    `arn:aws:s3:::${bucket}`,
+                    `arn:aws:s3:::${bucket}/*`,
+                ],
+            }],
+        })
+);
+
+inlinePolicy.apply(console.log);
+
 const role = new aws.iam.Role(
     "ec2-role",
     {
@@ -60,6 +95,12 @@ const role = new aws.iam.Role(
 		},
 	    }],
 	}),
+        inlinePolicies: [
+            {
+                name: "s3-policy",
+                policy: inlinePolicy,
+            },
+        ],
     },
     { provider: awsProvider, }
 );
