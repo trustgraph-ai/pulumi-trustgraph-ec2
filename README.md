@@ -34,6 +34,14 @@ Roadmap to deploy is:
 
 ## Deploy Pulumi
 
+Navigate to the Pulumi directory:
+
+```
+cd pulumi
+```
+
+Then:
+
 ```
 npm install
 ```
