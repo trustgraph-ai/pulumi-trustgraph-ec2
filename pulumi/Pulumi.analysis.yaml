@@ -1,8 +1,6 @@
 encryptionsalt: v1:1UK8A4yG5JE=:v1:8xtRfLggjL0RMbW+:lvXR4Cs07qLir2JKds8PmMX2q4+fHw==
 config:
   trustgraph:environment: analysis
-  trustgraph:hosted-domain: tmp.example.net
-  trustgraph:public-domain-name: wb.tmp.example.net
   trustgraph:region: eu-west-2
   trustgraph:vpc-cidr: 172.38.0.0/16
   trustgraph:pub-subnet-cidr: 172.38.48.0/20

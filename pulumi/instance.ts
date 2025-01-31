@@ -8,11 +8,8 @@ import * as tls from "@pulumi/tls";
 
 import { vpc, pubSubnet } from './vpc';
 import { awsProvider } from './aws-provider';
-import {
-    prefix, tags, region, publicDomainName
-} from './config';
+import { prefix, tags, region } from './config';
 import { secGroup } from './security-groups';
-import { zone } from './dns-zone';
 import { address } from './address';
 
 // Ubuntu server 24.04 LTS in London
@@ -148,24 +145,5 @@ export const instance = new aws.ec2.Instance(
     },
     { provider: awsProvider, }
 
-);
-
-////////////////////////////////////////////////////////////////////////////
-
-// DNS record for the public front-end, is a CNAME reference
-// to the load balancer
-
-const resourceRecord = new aws.route53.Record(
-    "public-domain-name",
-    {
-        zoneId: zone.zoneId,
-        name: publicDomainName,
-        type: "A",
-        ttl: 60,
-        records: [
-            address.publicIp
-        ]
-    },
-    { provider: awsProvider }
 );
 

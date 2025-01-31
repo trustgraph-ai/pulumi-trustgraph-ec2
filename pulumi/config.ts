@@ -24,9 +24,6 @@ export const environment = get("environment");
 // Get 'region', should be something like live, dev, ref etc.
 export const region = get("region");
 
-export const publicDomainName = get("public-domain-name");
-export const hostedDomain = get("hosted-domain");
-
 // Default tags
 export const tags : { [key : string] : string } = {
 };
