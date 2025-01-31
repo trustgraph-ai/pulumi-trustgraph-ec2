@@ -951,9 +951,9 @@ services:
     - -p
     - pulsar://pulsar:6650
     - -x
-    - '2000'
+    - '8192'
     - -t
-    - '0.300'
+    - '0.150'
     - -m
     - anthropic.claude-3-5-haiku-20241022-v1:0
     deploy:
@@ -974,9 +974,9 @@ services:
     - -p
     - pulsar://pulsar:6650
     - -x
-    - '2000'
+    - '8192'
     - -t
-    - '0.300'
+    - '0.150'
     - -m
     - anthropic.claude-3-5-haiku-20241022-v1:0
     - -i
