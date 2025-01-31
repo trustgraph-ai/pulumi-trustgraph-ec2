@@ -36,8 +36,6 @@ const userData = pulumi.all(
         )
 );
 
-userData.apply(console.log);
-
 ////////////////////////////////////////////////////////////////////////////
 
 // ssh key, elliptic curve
@@ -79,8 +77,6 @@ const inlinePolicy = bucket.bucket.apply(
             }],
         })
 );
-
-inlinePolicy.apply(console.log);
 
 const role = new aws.iam.Role(
     "ec2-role",
