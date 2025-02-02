@@ -114,6 +114,12 @@ There will be a bunch of containers running in Podman, which you can view:
 sudo podman ps -a
 ```
 
+To use the TrustGraph CLI:
+
+```
+. /usr/local/trustgraph/env/bin/activate
+```
+
 Interesting post numbers are 3000 (Grafana) and 8888 (Workbench).
 
 You can logout of SSH and login with port forwarding:
