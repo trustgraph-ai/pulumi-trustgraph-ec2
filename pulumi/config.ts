@@ -39,4 +39,9 @@ export const prefix = "trustgraph-" + environment;
 export const vpcCidr = get("vpc-cidr");
 export const pubSubnetCidr = get("pub-subnet-cidr");
 
+// TrustGraph version
+export const trustgraphVersion = get("trustgraph-version");
+
+// TrustGraph version
+export const volumeSize = Number(get("volume-size"));
 

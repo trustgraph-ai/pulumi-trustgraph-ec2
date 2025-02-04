@@ -8,7 +8,9 @@ import * as tls from "@pulumi/tls";
 
 import { vpc, pubSubnet } from './vpc';
 import { awsProvider } from './aws-provider';
-import { prefix, tags, region } from './config';
+import {
+    prefix, tags, region, trustgraphVersion, volumeSize
+} from './config';
 import { secGroup } from './security-groups';
 import { address } from './address';
 
@@ -33,7 +35,8 @@ const userData = pulumi.all(
         btoa(
             template.
                 replace("%BUCKET%", bucket).
-                replace("%KEY%", key)
+                replace("%KEY%", key).
+                replace("%VERSION%", trustgraphVersion)
         )
 );
 
@@ -161,7 +164,7 @@ export const instance = new aws.ec2.Instance(
 	],
 	iamInstanceProfile: instanceProfile.name,
 	rootBlockDevice: {
-            volumeSize: 10,
+            volumeSize: volumeSize,
             volumeType: "gp3",
             deleteOnTermination: true,
             encrypted: true,

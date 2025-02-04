@@ -3,7 +3,7 @@
 exec >/tmp/output 2>&1
 set -x
 
-version=0.20.9
+version="%VERSION%"
 trustgraph=/usr/local/trustgraph
 
 export DEBIAN_FRONTEND=noninteractive

@@ -4,3 +4,5 @@ config:
   trustgraph:region: us-west-2
   trustgraph:vpc-cidr: 172.38.0.0/16
   trustgraph:pub-subnet-cidr: 172.38.48.0/20
+  trustgraph:trustgraph-version: 0.20.11
+  trustgraph:volume-size: 100
