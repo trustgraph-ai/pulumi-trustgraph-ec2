@@ -4,19 +4,22 @@ services:
     - agent-manager-react
     - -p
     - pulsar://pulsar:6650
-    - --tool-type
-    - knowledge-query=knowledge-query
-    - general-knowledge=text-completion
-    - --tool-description
-    - knowledge-query=This tool queries the knowledge base for information about the Space Shuttle, NASA, space domain knowledge and safety engineering in the space sector.  Make sure your questions is as full as possible and clearly requests as much information as you need to answer the question.
-    - general-knowledge=Questions about general knowledge from the internet.  May not be contained with domain-specific knowledge bases.
-    - --tool-argument
-    - knowledge-query=query:string:A natural language question
-    - general-knowledge=question:string:A natural language question
     - --prompt-request-queue
     - non-persistent://tg/request/prompt-rag
     - --prompt-response-queue
     - non-persistent://tg/response/prompt-rag
+    - --tool-type
+    - sample-query=knowledge-query
+    - sample-completion=text-completion
+    - --tool-description
+    - sample-query=This tool queries a knowledge base that holds information about
+      XYZ.  The query should be a natural language question.
+    - sample-completion=This tool queries an LLM for further information.  The query
+      should be a natural language question.
+    - --tool-argument
+    - sample-query=query:string:A simple natural language question.
+    - sample-completion=question:string:The question which should be asked of the
+      LLM.
     deploy:
       resources:
         limits:
@@ -25,7 +28,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   api-gateway:
     command:
@@ -46,7 +49,7 @@ services:
           memory: 256M
     environment:
       GATEWAY_SECRET: ${GATEWAY_SECRET}
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     ports:
     - 8000:8000
     - 8088:8088
@@ -112,7 +115,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   document-embeddings:
     command:
@@ -127,13 +130,15 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   document-rag:
     command:
     - document-rag
     - -p
     - pulsar://pulsar:6650
+    - --doc-limit
+    - '20'
     - --prompt-request-queue
     - non-persistent://tg/request/prompt-rag
     - --prompt-response-queue
@@ -146,7 +151,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   embeddings:
     command:
@@ -163,7 +168,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 400M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   grafana:
     deploy:
@@ -198,7 +203,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   graph-rag:
     command:
@@ -214,7 +219,9 @@ services:
     - --triple-limit
     - '30'
     - --max-subgraph-size
-    - '3000'
+    - '400'
+    - --max-path-length
+    - '2'
     deploy:
       resources:
         limits:
@@ -223,7 +230,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   init-trustgraph:
     command:
@@ -238,7 +245,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   kg-extract-definitions:
     command:
@@ -253,7 +260,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   kg-extract-relationships:
     command:
@@ -268,7 +275,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   kg-extract-topics:
     command:
@@ -283,7 +290,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   metering:
     command:
@@ -298,7 +305,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   metering-rag:
     command:
@@ -315,7 +322,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   pdf-decoder:
     command:
@@ -330,7 +337,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   prometheus:
     deploy:
@@ -358,7 +365,10 @@ services:
     - --text-completion-response-queue
     - non-persistent://tg/response/text-completion
     - --system-prompt
-    - You are a helpful assistant.
+    - 'You are a helpful assistant that performs NLP, Natural Language Processing,
+      tasks.
+
+      '
     - --prompt
     - "agent-react=Answer the following questions as best you can. You have\naccess\
       \ to the following functions:\n\n{% for tool in tools %}{\n    \"function\"\
@@ -372,7 +382,7 @@ services:
       : \"your thought about what to do\",\n    \"action\": \"the action to take,\
       \ should be one of [{{tool_names}}]\",\n    \"arguments\": {\n        \"argument1\"\
       : \"argument_value\",\n        \"argument2\": \"argument_value\"\n    }\n}\n\
-      \nTo provide a final answer, respond with a JSON object of the following format - The final answer must be have a 'final-answer' tag, and the value must be a string:\n\
+      \nTo provide a final answer, response a JSON object of the following format:\n\
       \n{\n  \"thought\": \"I now know the final answer\",\n  \"final-answer\": \"\
       the final answer to the original input question\"\n}\n\nPrevious steps are included\
       \ in the input.  Each step has the following\nformat in your output:\n\n{\n\
@@ -401,48 +411,42 @@ services:
       {{query}}
 
       '
-    - 'extract-definitions=<instructions>
-
-      Study the following text and derive definitions for any discovered entities.
-
-      Do not provide definitions for entities whose definitions are incomplete
-
-      or unknown.
-
-      Output relationships in JSON format as an arary of objects with fields:
+    - 'extract-definitions=Study the following text and derive definitions for any
+      discovered entities. Do not provide definitions for entities whose definitions
+      are incomplete or unknown. Output relationships in JSON format as an array of
+      objects with keys:
 
       - entity: the name of the entity
 
       - definition: English text which defines the entity
 
-      </instructions>
 
-
-      <text>
+      Here is the text:
 
       {{text}}
 
-      </text>
+
+      Requirements:
+
+      - Do not provide explanations.
+
+      - Do not use special characters in the response text.
+
+      - The response will be written as plain text.
+
+      - Do not include null or unknown definitions.
+
+      - The response shall use the following JSON schema structure:
 
 
-      <requirements>
+      ```json
 
-      You will respond only with raw JSON format data. Do not provide
+      [{"entity": string, "definition": string}]
 
-      explanations. Do not use special characters in the abstract text. The
-
-      abstract will be written as plain text.  Do not add markdown formatting
-
-      or headers or prefixes.  Do not include null or unknown definitions.
-
-      </requirements>'
-    - 'extract-relationships=<instructions>
-
-      Study the following text and derive entity relationships.  For each
-
-      relationship, derive the subject, predicate and object of the relationship.
-
-      Output relationships in JSON format as an arary of objects with fields:
+      ```'
+    - 'extract-relationships=Study the following text and derive entity relationships.  For
+      each relationship, derive the subject, predicate and object of the relationship.
+      Output relationships in JSON format as an array of objects with keys:
 
       - subject: the subject of the relationship
 
@@ -450,30 +454,36 @@ services:
 
       - object: the object of the relationship
 
-      - object-entity: false if the object is a simple data type: name, value or date.  true
-      if it is an entity.
-
-      </instructions>
+      - object-entity: FALSE if the object is a simple data type and TRUE if the object
+      is an entity
 
 
-      <text>
+      Here is the text:
 
       {{text}}
 
-      </text>
+
+      Requirements:
+
+      - You will respond only with well formed JSON.
+
+      - Do not provide explanations.
+
+      - Respond only with plain text.
+
+      - Do not respond with special characters.
+
+      - The response shall use the following JSON schema structure:
 
 
-      <requirements>
+      ```json
 
-      You will respond only with raw JSON format data. Do not provide
+      [{"subject": string, "predicate": string, "object": string, "object-entity":
+      boolean}]
 
-      explanations. Do not use special characters in the abstract text. The
+      ```
 
-      abstract must be written as plain text.  Do not add markdown formatting
-
-      or headers or prefixes.
-
-      </requirements>'
+      '
     - 'extract-rows=<instructions>
 
       Study the following text and derive objects which match the schema provided.
@@ -509,17 +519,16 @@ services:
       explanations. Do not add markdown formatting or headers or prefixes.
 
       </requirements>'
-    - "extract-topics=You are a helpful assistant that performs information extraction\
-      \ tasks for a provided text.\nRead the provided text. You will identify topics\
-      \ and their definitions in JSON.\n\nReading Instructions:\n- Ignore document\
-      \ formatting in the provided text.\n- Study the provided text carefully.\n\n\
-      Here is the text:\n{{text}}\n\nResponse Instructions: \n- Do not respond with\
-      \ special characters.\n- Return only topics that are concepts and unique to\
-      \ the provided text.\n- Respond only with well-formed JSON.\n- The JSON response\
-      \ shall be an array of objects with keys \"topic\" and \"definition\". \n- The\
-      \ JSON response shall use the following structure:\n\n```json\n[{\"topic\":\
-      \ string, \"definition\": string}]\n```\n\n- Do not write any additional text\
-      \ or explanations."
+    - "extract-topics=Read the provided text carefully. You will identify topics and\
+      \ their definitions found in the provided text. Topics are intangible concepts.\n\
+      \nReading Instructions:\n- Ignore document formatting in the provided text.\n\
+      - Study the provided text carefully for intangible concepts.\n\nHere is the\
+      \ text:\n{{text}}\n\nResponse Instructions: \n- Do not respond with special\
+      \ characters.\n- Return only topics that are concepts and unique to the provided\
+      \ text.\n- Respond only with well-formed JSON.\n- The JSON response shall be\
+      \ an array of objects with keys \"topic\" and \"definition\". \n- The response\
+      \ shall use the following JSON schema structure:\n\n```json\n[{\"topic\": string,\
+      \ \"definition\": string}]\n```\n\n- Do not write any additional text or explanations."
     - 'kg-prompt=Study the following set of knowledge statements. The statements are
       written in Cypher format that has been extracted from a knowledge graph. Use
       only the provided set of knowledge statements in your response. Do not speculate
@@ -560,7 +569,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   prompt-rag:
     command:
@@ -576,7 +585,10 @@ services:
     - --text-completion-response-queue
     - non-persistent://tg/response/text-completion-rag
     - --system-prompt
-    - You are a helpful assistant.
+    - 'You are a helpful assistant that performs NLP, Natural Language Processing,
+      tasks.
+
+      '
     - --prompt
     - "agent-react=Answer the following questions as best you can. You have\naccess\
       \ to the following functions:\n\n{% for tool in tools %}{\n    \"function\"\
@@ -590,7 +602,7 @@ services:
       : \"your thought about what to do\",\n    \"action\": \"the action to take,\
       \ should be one of [{{tool_names}}]\",\n    \"arguments\": {\n        \"argument1\"\
       : \"argument_value\",\n        \"argument2\": \"argument_value\"\n    }\n}\n\
-      \nTo provide a final answer, respond with a JSON object of the following format - the final answer must be have a 'final-answer' tag, and the value must be a string:\n\
+      \nTo provide a final answer, response a JSON object of the following format:\n\
       \n{\n  \"thought\": \"I now know the final answer\",\n  \"final-answer\": \"\
       the final answer to the original input question\"\n}\n\nPrevious steps are included\
       \ in the input.  Each step has the following\nformat in your output:\n\n{\n\
@@ -619,48 +631,42 @@ services:
       {{query}}
 
       '
-    - 'extract-definitions=<instructions>
-
-      Study the following text and derive definitions for any discovered entities.
-
-      Do not provide definitions for entities whose definitions are incomplete
-
-      or unknown.
-
-      Output relationships in JSON format as an arary of objects with fields:
+    - 'extract-definitions=Study the following text and derive definitions for any
+      discovered entities. Do not provide definitions for entities whose definitions
+      are incomplete or unknown. Output relationships in JSON format as an array of
+      objects with keys:
 
       - entity: the name of the entity
 
       - definition: English text which defines the entity
 
-      </instructions>
 
-
-      <text>
+      Here is the text:
 
       {{text}}
 
-      </text>
+
+      Requirements:
+
+      - Do not provide explanations.
+
+      - Do not use special characters in the response text.
+
+      - The response will be written as plain text.
+
+      - Do not include null or unknown definitions.
+
+      - The response shall use the following JSON schema structure:
 
 
-      <requirements>
+      ```json
 
-      You will respond only with raw JSON format data. Do not provide
+      [{"entity": string, "definition": string}]
 
-      explanations. Do not use special characters in the abstract text. The
-
-      abstract will be written as plain text.  Do not add markdown formatting
-
-      or headers or prefixes.  Do not include null or unknown definitions.
-
-      </requirements>'
-    - 'extract-relationships=<instructions>
-
-      Study the following text and derive entity relationships.  For each
-
-      relationship, derive the subject, predicate and object of the relationship.
-
-      Output relationships in JSON format as an arary of objects with fields:
+      ```'
+    - 'extract-relationships=Study the following text and derive entity relationships.  For
+      each relationship, derive the subject, predicate and object of the relationship.
+      Output relationships in JSON format as an array of objects with keys:
 
       - subject: the subject of the relationship
 
@@ -668,30 +674,36 @@ services:
 
       - object: the object of the relationship
 
-      - object-entity: false if the object is a simple data type: name, value or date.  true
-      if it is an entity.
-
-      </instructions>
+      - object-entity: FALSE if the object is a simple data type and TRUE if the object
+      is an entity
 
 
-      <text>
+      Here is the text:
 
       {{text}}
 
-      </text>
+
+      Requirements:
+
+      - You will respond only with well formed JSON.
+
+      - Do not provide explanations.
+
+      - Respond only with plain text.
+
+      - Do not respond with special characters.
+
+      - The response shall use the following JSON schema structure:
 
 
-      <requirements>
+      ```json
 
-      You will respond only with raw JSON format data. Do not provide
+      [{"subject": string, "predicate": string, "object": string, "object-entity":
+      boolean}]
 
-      explanations. Do not use special characters in the abstract text. The
+      ```
 
-      abstract must be written as plain text.  Do not add markdown formatting
-
-      or headers or prefixes.
-
-      </requirements>'
+      '
     - 'extract-rows=<instructions>
 
       Study the following text and derive objects which match the schema provided.
@@ -727,17 +739,16 @@ services:
       explanations. Do not add markdown formatting or headers or prefixes.
 
       </requirements>'
-    - "extract-topics=You are a helpful assistant that performs information extraction\
-      \ tasks for a provided text.\nRead the provided text. You will identify topics\
-      \ and their definitions in JSON.\n\nReading Instructions:\n- Ignore document\
-      \ formatting in the provided text.\n- Study the provided text carefully.\n\n\
-      Here is the text:\n{{text}}\n\nResponse Instructions: \n- Do not respond with\
-      \ special characters.\n- Return only topics that are concepts and unique to\
-      \ the provided text.\n- Respond only with well-formed JSON.\n- The JSON response\
-      \ shall be an array of objects with keys \"topic\" and \"definition\". \n- The\
-      \ JSON response shall use the following structure:\n\n```json\n[{\"topic\":\
-      \ string, \"definition\": string}]\n```\n\n- Do not write any additional text\
-      \ or explanations."
+    - "extract-topics=Read the provided text carefully. You will identify topics and\
+      \ their definitions found in the provided text. Topics are intangible concepts.\n\
+      \nReading Instructions:\n- Ignore document formatting in the provided text.\n\
+      - Study the provided text carefully for intangible concepts.\n\nHere is the\
+      \ text:\n{{text}}\n\nResponse Instructions: \n- Do not respond with special\
+      \ characters.\n- Return only topics that are concepts and unique to the provided\
+      \ text.\n- Respond only with well-formed JSON.\n- The JSON response shall be\
+      \ an array of objects with keys \"topic\" and \"definition\". \n- The response\
+      \ shall use the following JSON schema structure:\n\n```json\n[{\"topic\": string,\
+      \ \"definition\": string}]\n```\n\n- Do not write any additional text or explanations."
     - 'kg-prompt=Study the following set of knowledge statements. The statements are
       written in Cypher format that has been extracted from a knowledge graph. Use
       only the provided set of knowledge statements in your response. Do not speculate
@@ -778,7 +789,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   pulsar:
     command:
@@ -836,7 +847,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 1024M
-    image: docker.io/qdrant/qdrant:v1.11.1
+    image: docker.io/qdrant/qdrant:v1.13.3
     ports:
     - 6333:6333
     - 6334:6334
@@ -858,7 +869,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   query-graph-embeddings:
     command:
@@ -875,7 +886,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   query-triples:
     command:
@@ -892,7 +903,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   store-doc-embeddings:
     command:
@@ -909,7 +920,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   store-graph-embeddings:
     command:
@@ -926,7 +937,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   store-triples:
     command:
@@ -943,7 +954,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:0.20.11
+    image: docker.io/trustgraph/trustgraph-flow:0.21.17
     restart: on-failure:100
   text-completion:
     command:
@@ -951,9 +962,9 @@ services:
     - -p
     - pulsar://pulsar:6650
     - -x
-    - '8192'
+    - '8000'
     - -t
-    - '0.150'
+    - '0.100'
     - -m
     - anthropic.claude-3-5-haiku-20241022-v1:0
     deploy:
@@ -965,8 +976,10 @@ services:
           cpus: '0.1'
           memory: 128M
     environment:
-      AWS_DEFAULT_REGION: us-west-2
-    image: docker.io/trustgraph/trustgraph-bedrock:0.20.11
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    image: docker.io/trustgraph/trustgraph-bedrock:0.21.17
     restart: on-failure:100
   text-completion-rag:
     command:
@@ -974,9 +987,9 @@ services:
     - -p
     - pulsar://pulsar:6650
     - -x
-    - '8192'
+    - '8000'
     - -t
-    - '0.150'
+    - '0.100'
     - -m
     - anthropic.claude-3-5-haiku-20241022-v1:0
     - -i
@@ -992,8 +1005,10 @@ services:
           cpus: '0.1'
           memory: 128M
     environment:
-      AWS_DEFAULT_REGION: us-west-2
-    image: docker.io/trustgraph/trustgraph-bedrock:0.20.11
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    image: docker.io/trustgraph/trustgraph-bedrock:0.21.17
     restart: on-failure:100
   workbench-ui:
     deploy:
@@ -1004,7 +1019,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/workbench-ui:0.2.4
+    image: docker.io/trustgraph/workbench-ui:0.2.6
     ports:
     - 8888:8888
     restart: on-failure:100

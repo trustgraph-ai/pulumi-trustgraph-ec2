@@ -78,6 +78,12 @@ You can edit:
 - change the version number in `init-script.sh` to match the version
   you are deploying
 
+The docker-compose.yaml file was created using the TrustGraph config portal,
+so you can re-generate your own.  The only change was to delete the
+AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY references in the config
+file.  These aren't needed as this is running in an AWS instance, AWS
+metadata is used to configure credentials.
+
 ## Deploy
 
 ```

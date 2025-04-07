@@ -1,5 +1,5 @@
-name: trustgraph
-description: Trustgraph deployment
+name: trustgraph-aws-ec2
+description: Trustgraph deployment on an AWS EC2 instance
 runtime: nodejs
 # backend:
 #   url: s3://bucket-state/whatever?region=eu-west-2
