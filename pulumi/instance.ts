@@ -36,7 +36,8 @@ const userData = pulumi.all(
             template.
                 replace("%BUCKET%", bucket).
                 replace("%KEY%", key).
-                replace("%VERSION%", trustgraphVersion)
+                replace("%VERSION%", trustgraphVersion).
+                replace("%REGION%", region)
         )
 );
 

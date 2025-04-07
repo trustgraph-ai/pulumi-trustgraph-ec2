@@ -59,6 +59,8 @@ key="%KEY%"
 
 cd /usr/local/trustgraph/deploy
 
+export AWS_DEFAULT_REGION="%REGION%"
+
 aws s3 cp "s3://${bucket}/${key}" docker-compose.yaml
 
 podman-compose -f docker-compose.yaml pull
