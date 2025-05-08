@@ -281,12 +281,16 @@
             "type": "prometheus",
             "uid": "f6b18033-5918-4e05-a1ca-4cb30343b129"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "rate(request_latency_count[1m])",
+          "expr": "sum by(processor) (rate(request_latency_count{processor!=\"config-svc\"}[$__rate_interval]))",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "{{job}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Request rate",
@@ -377,12 +381,16 @@
             "type": "prometheus",
             "uid": "f6b18033-5918-4e05-a1ca-4cb30343b129"
           },
+          "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "pulsar_msg_backlog",
+          "expr": "pulsar_msg_backlog{topic!=\"persistent://tg/config/config\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "{{topic}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Pub/sub backlog",
