@@ -38,8 +38,8 @@ python3 -m venv ${trustgraph}/env
 
 pip install trustgraph-cli==${version}
 
-repo=https://raw.githubusercontent.com/trustgraph-ai/trustgraph/
-repo_raw=${repo}/refs/tags/v${version}
+repo=https://raw.githubusercontent.com/trustgraph-ai/pulumi-trustgraph-ec2/
+repo_raw=${repo}/refs/tags/master
 
 wget -q -O- ${repo_raw}/prometheus/prometheus.yml \
      > ${trustgraph}/deploy/prometheus/prometheus.yml
