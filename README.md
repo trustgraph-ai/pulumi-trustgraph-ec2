@@ -139,6 +139,13 @@ This will allow you to access Grafana and the Workbench UI from your local
 browser using `http://localhost:3000` and `http://localhost:8888`
 respectively.
 
+## How the config was built
 
-
+```
+python3 -m venv env
+. env/bin/activate
+pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@5e839db05e9e278374d510c9cdd0c02ade12aabd
+tg-configurator -t 1.4 -v 1.4.19 --platform docker-compose -R > docker-compose.yaml
+tg-configurator -t 1.4 -v 1.4.19 -O > tg-config.json
+```
 

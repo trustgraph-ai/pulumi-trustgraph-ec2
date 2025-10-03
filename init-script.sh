@@ -31,6 +31,7 @@ mkdir ${trustgraph}/deploy/prometheus
 mkdir ${trustgraph}/deploy/grafana
 mkdir ${trustgraph}/deploy/grafana/dashboards
 mkdir ${trustgraph}/deploy/grafana/provisioning
+mkdir ${trustgraph}/deploy/trustgraph
 
 python3 -m venv ${trustgraph}/env
 . ${trustgraph}/env/bin/activate
@@ -51,6 +52,9 @@ wget -q -O- ${repo_raw}/grafana/provisioning/datasource.yml \
 
 wget -q -O- ${repo_raw}/grafana/provisioning/dashboard.yml \
      > ${trustgraph}/deploy/grafana/provisioning/dashboard.yml
+
+wget -q -O- ${repo_raw}/tg-config.json \
+     > ${trustgraph}/deploy/trustgraph/config.json
 
 chcon -Rt svirt_sandbox_file_t ${trustgraph}/deploy
 
