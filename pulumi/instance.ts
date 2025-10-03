@@ -9,16 +9,15 @@ import * as tls from "@pulumi/tls";
 import { vpc, pubSubnet } from './vpc';
 import { awsProvider } from './aws-provider';
 import {
-    prefix, tags, region, trustgraphVersion, volumeSize
+    prefix, tags, region, trustgraphVersion, volumeSize, ami
 } from './config';
 import { secGroup } from './security-groups';
 import { address } from './address';
 
 import { bucket, resourceObject } from './resources';
 
-// Ubuntu server 24.04 LTS in London
-//const ami = "ami-053a617c6207ecc7b";
-const ami = "ami-00c257e12d6828491";
+// Ubuntu server 24.04 LTS
+// AMI ID is now configured via Pulumi config (ami parameter)
 
 //const instanceType = "t3a.xlarge";
 

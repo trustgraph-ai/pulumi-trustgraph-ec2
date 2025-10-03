@@ -45,3 +45,6 @@ export const trustgraphVersion = get("trustgraph-version");
 // TrustGraph version
 export const volumeSize = Number(get("volume-size"));
 
+// AMI ID
+export const ami = get("ami");
+
