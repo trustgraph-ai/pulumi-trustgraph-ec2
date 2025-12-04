@@ -10,7 +10,8 @@ import { prefix, tags, region } from './config';
 
 ////////////////////////////////////////////////////////////////////////////
 
-const asset = new pulumi.asset.FileAsset("../docker-compose.yaml");
+const resourceAsset = new pulumi.asset.FileAsset("../docker-compose.yaml");
+const configAsset = new pulumi.asset.FileAsset("../tg-config.json");
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,17 @@ export const resourceObject = new aws.s3.BucketObjectv2(
     {
 	key: "resources.yaml",
         bucket: bucket.id,
-        source: asset,
+        source: resourceAsset,
+    },
+    { provider: awsProvider }
+);
+
+export const configObject = new aws.s3.BucketObjectv2(
+    "config-resource",
+    {
+	key: "config.json",
+        bucket: bucket.id,
+        source: configAsset,
     },
     { provider: awsProvider }
 );

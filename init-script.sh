@@ -59,13 +59,16 @@ wget -q -O- ${repo_raw}/tg-config.json \
 chcon -Rt svirt_sandbox_file_t ${trustgraph}/deploy
 
 bucket="%BUCKET%"
-key="%KEY%"
+resource_key="%KEY%"
+config_key="%KEY%"
 
 cd /usr/local/trustgraph/deploy
 
 export AWS_DEFAULT_REGION="%REGION%"
 
-aws s3 cp "s3://${bucket}/${key}" docker-compose.yaml
+aws s3 cp "s3://${bucket}/${resource_key}" docker-compose.yaml
+mkdir -p trustgraph/
+aws s3 cp "s3://${bucket}/${config_key}" trustgraph/config.json
 
 podman-compose -f docker-compose.yaml pull
 
