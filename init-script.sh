@@ -25,50 +25,25 @@ touch /etc/containers/nodocker
 # grafana
 # prometheus
 
-mkdir -p ${trustgraph}
-mkdir ${trustgraph}/deploy
-mkdir ${trustgraph}/deploy/prometheus
-mkdir ${trustgraph}/deploy/grafana
-mkdir ${trustgraph}/deploy/grafana/dashboards
-mkdir ${trustgraph}/deploy/grafana/provisioning
-mkdir ${trustgraph}/deploy/trustgraph
+mkdir -p ${trustgraph}/deploy
 
 python3 -m venv ${trustgraph}/env
 . ${trustgraph}/env/bin/activate
 
 pip install trustgraph-cli==${version}
 
-repo=https://raw.githubusercontent.com/trustgraph-ai/pulumi-trustgraph-ec2
-repo_raw=${repo}/refs/heads/master
-
-wget -q -O- ${repo_raw}/prometheus/prometheus.yml \
-     > ${trustgraph}/deploy/prometheus/prometheus.yml
-
-wget -q -O- ${repo_raw}/grafana/dashboards/dashboard.json \
-     > ${trustgraph}/deploy/grafana/dashboards/dashboard.json
-
-wget -q -O- ${repo_raw}/grafana/provisioning/datasource.yml \
-     > ${trustgraph}/deploy/grafana/provisioning/datasource.yml
-
-wget -q -O- ${repo_raw}/grafana/provisioning/dashboard.yml \
-     > ${trustgraph}/deploy/grafana/provisioning/dashboard.yml
-
-wget -q -O- ${repo_raw}/tg-config.json \
-     > ${trustgraph}/deploy/trustgraph/config.json
-
-chcon -Rt svirt_sandbox_file_t ${trustgraph}/deploy
-
 bucket="%BUCKET%"
-resource_key="%KEY%"
-config_key="%KEY%"
+deploy_key="%DEPLOY_KEY%"
 
-cd /usr/local/trustgraph/deploy
+cd ${trustgraph}/deploy
 
 export AWS_DEFAULT_REGION="%REGION%"
 
-aws s3 cp "s3://${bucket}/${resource_key}" docker-compose.yaml
-mkdir -p trustgraph/
-aws s3 cp "s3://${bucket}/${config_key}" trustgraph/config.json
+aws s3 cp "s3://${bucket}/${deploy_key}" output.zip
+unzip -q output.zip
+rm output.zip
+
+chcon -Rt svirt_sandbox_file_t ${trustgraph}/deploy
 
 podman-compose -f docker-compose.yaml pull
 

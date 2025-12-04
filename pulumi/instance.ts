@@ -14,7 +14,7 @@ import {
 import { secGroup } from './security-groups';
 import { address } from './address';
 
-import { bucket, resourceObject, configObject } from './resources';
+import { bucket, deployObject } from './resources';
 
 // Ubuntu server 24.04 LTS
 // AMI ID is now configured via Pulumi config (ami parameter)
@@ -28,14 +28,13 @@ const instanceType = "m7i.xlarge";
 const template = fs.readFileSync("../init-script.sh").toString();
 
 const userData = pulumi.all(
-    [bucket.bucket, resourceObject.key, configObject.key]
+    [bucket.bucket, deployObject.key]
 ).apply(
-    ([bucket, resourceKey, configKey]) =>
+    ([bucket, deployKey]) =>
         btoa(
             template.
                 replace("%BUCKET%", bucket).
-                replace("%RESOURCE-KEY%", resourceKey).
-                replace("%CONFIG-KEY%", configKey).
+                replace("%DEPLOY_KEY%", deployKey).
                 replace("%VERSION%", trustgraphVersion).
                 replace("%REGION%", region)
         )
