@@ -1,9 +1,9 @@
 encryptionsalt: v1:1UK8A4yG5JE=:v1:8xtRfLggjL0RMbW+:lvXR4Cs07qLir2JKds8PmMX2q4+fHw==
 config:
   trustgraph-aws-ec2:environment: analysis
-  trustgraph-aws-ec2:region: eu-west-2
+  trustgraph-aws-ec2:region: us-west-2
   trustgraph-aws-ec2:vpc-cidr: 172.38.0.0/16
   trustgraph-aws-ec2:pub-subnet-cidr: 172.38.48.0/20
-  trustgraph-aws-ec2:trustgraph-version: 0.21.19
+  trustgraph-aws-ec2:trustgraph-version: 1.6.5
   trustgraph-aws-ec2:volume-size: 100
-  trustgraph-aws-ec2:ami: ami-00c257e12d6828491
+  trustgraph-aws-ec2:ami: ami-00f46ccd1cbfb363e

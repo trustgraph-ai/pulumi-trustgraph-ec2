@@ -10,7 +10,7 @@ import { prefix, tags, region } from './config';
 
 ////////////////////////////////////////////////////////////////////////////
 
-const asset = new pulumi.asset.FileAsset("../docker-compose.yaml");
+const deployAsset = new pulumi.asset.FileAsset("../output.zip");
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -22,12 +22,12 @@ export const bucket = new aws.s3.BucketV2(
     { provider: awsProvider }
 );
 
-export const resourceObject = new aws.s3.BucketObjectv2(
-    "bucket-resource",
+export const deployObject = new aws.s3.BucketObjectv2(
+    "deploy-resource",
     {
-	key: "resources.yaml",
+	key: "output.zip",
         bucket: bucket.id,
-        source: asset,
+        source: deployAsset,
     },
     { provider: awsProvider }
 );

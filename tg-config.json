@@ -5,6 +5,8 @@
             "description": "DocumentRAG only",
             "flow": {
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
@@ -32,6 +34,7 @@
                     "response": "non-persistent://tg/response/document-rag:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -107,14 +110,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -166,6 +175,8 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
@@ -193,6 +204,7 @@
                     "response": "non-persistent://tg/response/document-rag:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -332,14 +344,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -393,6 +411,8 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
@@ -420,6 +440,7 @@
                     "response": "non-persistent://tg/response/document-rag:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -563,14 +584,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -624,6 +651,8 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
@@ -651,6 +680,7 @@
                     "response": "non-persistent://tg/response/document-rag:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -841,14 +871,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -904,10 +940,13 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -1038,14 +1077,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -1098,10 +1143,13 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -1226,14 +1274,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -1287,10 +1341,13 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -1459,14 +1516,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -1500,6 +1563,205 @@
                 "structured-data"
             ]
         },
+        "onto-rag": {
+            "class": {},
+            "description": "Ontology RAG only",
+            "flow": {
+                "agent-manager:{id}": {
+                    "graph-rag-request": "non-persistent://tg/request/graph-rag:{id}",
+                    "graph-rag-response": "non-persistent://tg/response/graph-rag:{id}",
+                    "mcp-tool-request": "non-persistent://tg/request/mcp-tool:{id}",
+                    "mcp-tool-response": "non-persistent://tg/response/mcp-tool:{id}",
+                    "next": "non-persistent://tg/request/agent:{id}",
+                    "prompt-request": "non-persistent://tg/request/prompt:{id}",
+                    "prompt-response": "non-persistent://tg/response/prompt:{id}",
+                    "request": "non-persistent://tg/request/agent:{id}",
+                    "response": "non-persistent://tg/response/agent:{id}",
+                    "structured-query-request": "non-persistent://tg/request/structured-query:{id}",
+                    "structured-query-response": "non-persistent://tg/response/structured-query:{id}",
+                    "text-completion-request": "non-persistent://tg/request/text-completion:{id}",
+                    "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
+                    "input": "persistent://tg/flow/text-document-load:{id}",
+                    "output": "persistent://tg/flow/chunk-load:{id}"
+                },
+                "embeddings:{id}": {
+                    "model": "{embeddings-model}",
+                    "request": "non-persistent://tg/request/embeddings:{id}",
+                    "response": "non-persistent://tg/response/embeddings:{id}"
+                },
+                "ge-query:{id}": {
+                    "request": "non-persistent://tg/request/graph-embeddings:{id}",
+                    "response": "non-persistent://tg/response/graph-embeddings:{id}"
+                },
+                "ge-write:{id}": {
+                    "input": "persistent://tg/flow/graph-embeddings-store:{id}"
+                },
+                "graph-embeddings:{id}": {
+                    "embeddings-request": "non-persistent://tg/request/embeddings:{id}",
+                    "embeddings-response": "non-persistent://tg/response/embeddings:{id}",
+                    "input": "persistent://tg/flow/entity-contexts-load:{id}",
+                    "output": "persistent://tg/flow/graph-embeddings-store:{id}"
+                },
+                "graph-rag:{id}": {
+                    "embeddings-request": "non-persistent://tg/request/embeddings:{id}",
+                    "embeddings-response": "non-persistent://tg/response/embeddings:{id}",
+                    "graph-embeddings-request": "non-persistent://tg/request/graph-embeddings:{id}",
+                    "graph-embeddings-response": "non-persistent://tg/response/graph-embeddings:{id}",
+                    "prompt-request": "non-persistent://tg/request/prompt-rag:{id}",
+                    "prompt-response": "non-persistent://tg/response/prompt-rag:{id}",
+                    "request": "non-persistent://tg/request/graph-rag:{id}",
+                    "response": "non-persistent://tg/response/graph-rag:{id}",
+                    "triples-request": "non-persistent://tg/request/triples:{id}",
+                    "triples-response": "non-persistent://tg/response/triples:{id}"
+                },
+                "kg-extract-ontology:{id}": {
+                    "embeddings-request": "non-persistent://tg/request/embeddings:{id}",
+                    "embeddings-response": "non-persistent://tg/response/embeddings:{id}",
+                    "entity-contexts": "persistent://tg/flow/entity-contexts-load:{id}",
+                    "input": "persistent://tg/flow/chunk-load:{id}",
+                    "prompt-request": "non-persistent://tg/request/prompt:{id}",
+                    "prompt-response": "non-persistent://tg/response/prompt:{id}",
+                    "triples": "persistent://tg/flow/triples-store:{id}"
+                },
+                "mcp-tool:{id}": {
+                    "request": "non-persistent://tg/request/mcp-tool:{id}",
+                    "response": "non-persistent://tg/response/mcp-tool:{id}",
+                    "text-completion-request": "non-persistent://tg/request/text-completion:{id}",
+                    "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "metering-rag:{id}": {
+                    "input": "non-persistent://tg/response/text-completion-rag:{id}"
+                },
+                "metering:{id}": {
+                    "input": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "pdf-decoder:{id}": {
+                    "input": "persistent://tg/flow/document-load:{id}",
+                    "output": "persistent://tg/flow/text-document-load:{id}"
+                },
+                "prompt-rag:{id}": {
+                    "request": "non-persistent://tg/request/prompt-rag:{id}",
+                    "response": "non-persistent://tg/response/prompt-rag:{id}",
+                    "text-completion-request": "non-persistent://tg/request/text-completion-rag:{id}",
+                    "text-completion-response": "non-persistent://tg/response/text-completion-rag:{id}"
+                },
+                "prompt:{id}": {
+                    "request": "non-persistent://tg/request/prompt:{id}",
+                    "response": "non-persistent://tg/response/prompt:{id}",
+                    "text-completion-request": "non-persistent://tg/request/text-completion:{id}",
+                    "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "text-completion-rag:{id}": {
+                    "model": "{llm-rag-model}",
+                    "request": "non-persistent://tg/request/text-completion-rag:{id}",
+                    "response": "non-persistent://tg/response/text-completion-rag:{id}"
+                },
+                "text-completion:{id}": {
+                    "model": "{llm-model}",
+                    "request": "non-persistent://tg/request/text-completion:{id}",
+                    "response": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "triples-query:{id}": {
+                    "request": "non-persistent://tg/request/triples:{id}",
+                    "response": "non-persistent://tg/response/triples:{id}"
+                },
+                "triples-write:{id}": {
+                    "input": "persistent://tg/flow/triples-store:{id}"
+                }
+            },
+            "interfaces": {
+                "agent": {
+                    "request": "non-persistent://tg/request/agent:{id}",
+                    "response": "non-persistent://tg/response/agent:{id}"
+                },
+                "document-load": "persistent://tg/flow/document-load:{id}",
+                "embeddings": {
+                    "request": "non-persistent://tg/request/embeddings:{id}",
+                    "response": "non-persistent://tg/response/embeddings:{id}"
+                },
+                "entity-contexts-load": "persistent://tg/flow/entity-contexts-load:{id}",
+                "graph-embeddings": {
+                    "request": "non-persistent://tg/request/graph-embeddings:{id}",
+                    "response": "non-persistent://tg/response/graph-embeddings:{id}"
+                },
+                "graph-embeddings-store": "persistent://tg/flow/graph-embeddings-store:{id}",
+                "graph-rag": {
+                    "request": "non-persistent://tg/request/graph-rag:{id}",
+                    "response": "non-persistent://tg/response/graph-rag:{id}"
+                },
+                "mcp-tool": {
+                    "request": "non-persistent://tg/request/mcp-tool:{id}",
+                    "response": "non-persistent://tg/response/mcp-tool:{id}"
+                },
+                "prompt": {
+                    "request": "non-persistent://tg/request/prompt:{id}",
+                    "response": "non-persistent://tg/response/prompt:{id}"
+                },
+                "text-completion": {
+                    "request": "non-persistent://tg/request/text-completion:{id}",
+                    "response": "non-persistent://tg/response/text-completion:{id}"
+                },
+                "text-load": "persistent://tg/flow/text-document-load:{id}",
+                "triples": {
+                    "request": "non-persistent://tg/request/triples:{id}",
+                    "response": "non-persistent://tg/response/triples:{id}"
+                },
+                "triples-store": "persistent://tg/flow/triples-store:{id}"
+            },
+            "parameters": {
+                "chunk-overlap": {
+                    "advanced": true,
+                    "description": "Chunk overlap",
+                    "order": 7,
+                    "type": "chunk-overlap"
+                },
+                "chunk-size": {
+                    "advanced": true,
+                    "description": "Chunk size",
+                    "order": 6,
+                    "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
+                },
+                "llm-model": {
+                    "advanced": false,
+                    "description": "LLM model",
+                    "order": 1,
+                    "type": "llm-model"
+                },
+                "llm-rag-model": {
+                    "advanced": true,
+                    "controlled-by": "llm-model",
+                    "description": "LLM model for RAG",
+                    "order": 2,
+                    "type": "llm-model"
+                },
+                "llm-rag-temperature": {
+                    "advanced": true,
+                    "description": "LLM temperature for RAG",
+                    "order": 4,
+                    "type": "llm-temperature"
+                },
+                "llm-temperature": {
+                    "advanced": true,
+                    "description": "LLM temperature",
+                    "order": 3,
+                    "type": "llm-temperature"
+                }
+            },
+            "tags": [
+                "graph-rag",
+                "knowledge-extraction"
+            ]
+        },
         "structured-data": {
             "class": {},
             "description": "Structured data only",
@@ -1520,10 +1782,13 @@
                     "text-completion-response": "non-persistent://tg/response/text-completion:{id}"
                 },
                 "chunker:{id}": {
+                    "chunk-overlap": "{chunk-overlap}",
+                    "chunk-size": "{chunk-size}",
                     "input": "persistent://tg/flow/text-document-load:{id}",
                     "output": "persistent://tg/flow/chunk-load:{id}"
                 },
                 "embeddings:{id}": {
+                    "model": "{embeddings-model}",
                     "request": "non-persistent://tg/request/embeddings:{id}",
                     "response": "non-persistent://tg/response/embeddings:{id}"
                 },
@@ -1645,14 +1910,20 @@
                 "chunk-overlap": {
                     "advanced": true,
                     "description": "Chunk overlap",
-                    "order": 6,
+                    "order": 7,
                     "type": "chunk-overlap"
                 },
                 "chunk-size": {
                     "advanced": true,
                     "description": "Chunk size",
-                    "order": 5,
+                    "order": 6,
                     "type": "chunk-size"
+                },
+                "embeddings-model": {
+                    "advanced": true,
+                    "description": "Embeddings model",
+                    "order": 5,
+                    "type": "embeddings-model"
                 },
                 "llm-model": {
                     "advanced": false,
@@ -1758,6 +2029,7 @@
             "parameters": {
                 "chunk-overlap": "50",
                 "chunk-size": "2000",
+                "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2",
                 "llm-model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
                 "llm-rag-model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
                 "llm-rag-temperature": "0.300",
@@ -1785,6 +2057,8 @@
         },
         "chunker": {
             "default": {
+                "chunk-overlap": "50",
+                "chunk-size": "2000",
                 "input": "persistent://tg/flow/text-document-load:default",
                 "output": "persistent://tg/flow/chunk-load:default"
             }
@@ -1822,6 +2096,7 @@
         },
         "embeddings": {
             "default": {
+                "model": "sentence-transformers/all-MiniLM-L6-v2",
                 "request": "non-persistent://tg/request/embeddings:default",
                 "response": "non-persistent://tg/response/embeddings:default"
             }
@@ -2091,6 +2366,130 @@
             "required": true,
             "type": "integer"
         },
+        "embeddings-model": {
+            "default": "sentence-transformers/all-MiniLM-L6-v2",
+            "description": "Embeddings model to use",
+            "enum": [
+                {
+                    "description": "all-MiniLM-L6-v2",
+                    "id": "sentence-transformers/all-MiniLM-L6-v2"
+                },
+                {
+                    "description": "bge-small-en-v1.5",
+                    "id": "BAAI/bge-small-en-v1.5"
+                },
+                {
+                    "description": "bge-small-zh-v1.5",
+                    "id": "BAAI/bge-small-zh-v1.5"
+                },
+                {
+                    "description": "snowflake-arctic-embed-xs",
+                    "id": "snowflake/snowflake-arctic-embed-xs"
+                },
+                {
+                    "description": "jina-embeddings-v2-small-en",
+                    "id": "jinaai/jina-embeddings-v2-small-en"
+                },
+                {
+                    "description": "nomic-embed-text-v1.5-Q",
+                    "id": "nomic-ai/nomic-embed-text-v1.5-Q"
+                },
+                {
+                    "description": "snowflake-arctic-embed-s",
+                    "id": "snowflake/snowflake-arctic-embed-s"
+                },
+                {
+                    "description": "bge-small-en",
+                    "id": "BAAI/bge-small-en"
+                },
+                {
+                    "description": "bge-base-en-v1.5",
+                    "id": "BAAI/bge-base-en-v1.5"
+                },
+                {
+                    "description": "paraphrase-multilingual-MiniLM-L12-v2",
+                    "id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+                },
+                {
+                    "description": "clip-ViT-B-32-text",
+                    "id": "Qdrant/clip-ViT-B-32-text"
+                },
+                {
+                    "description": "jina-embeddings-v2-base-de",
+                    "id": "jinaai/jina-embeddings-v2-base-de"
+                },
+                {
+                    "description": "bge-base-en",
+                    "id": "BAAI/bge-base-en"
+                },
+                {
+                    "description": "snowflake-arctic-embed-m",
+                    "id": "snowflake/snowflake-arctic-embed-m"
+                },
+                {
+                    "description": "gte-base",
+                    "id": "thenlper/gte-base"
+                },
+                {
+                    "description": "jina-embeddings-v2-base-en",
+                    "id": "jinaai/jina-embeddings-v2-base-en"
+                },
+                {
+                    "description": "nomic-embed-text-v1",
+                    "id": "nomic-ai/nomic-embed-text-v1"
+                },
+                {
+                    "description": "nomic-embed-text-v1.5",
+                    "id": "nomic-ai/nomic-embed-text-v1.5"
+                },
+                {
+                    "description": "snowflake-arctic-embed-m-long",
+                    "id": "snowflake/snowflake-arctic-embed-m-long"
+                },
+                {
+                    "description": "jina-clip-v1",
+                    "id": "jinaai/jina-clip-v1"
+                },
+                {
+                    "description": "mxbai-embed-large-v1",
+                    "id": "mixedbread-ai/mxbai-embed-large-v1"
+                },
+                {
+                    "description": "jina-embeddings-v2-base-es",
+                    "id": "jinaai/jina-embeddings-v2-base-es"
+                },
+                {
+                    "description": "jina-embeddings-v2-base-code",
+                    "id": "jinaai/jina-embeddings-v2-base-code"
+                },
+                {
+                    "description": "jina-embeddings-v2-base-zh",
+                    "id": "jinaai/jina-embeddings-v2-base-zh"
+                },
+                {
+                    "description": "paraphrase-multilingual-mpnet-base-v2",
+                    "id": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+                },
+                {
+                    "description": "snowflake-arctic-embed-l",
+                    "id": "snowflake/snowflake-arctic-embed-l"
+                },
+                {
+                    "description": "bge-large-en-v1.5",
+                    "id": "BAAI/bge-large-en-v1.5"
+                },
+                {
+                    "description": "gte-large",
+                    "id": "thenlper/gte-large"
+                },
+                {
+                    "description": "multilingual-e5-large",
+                    "id": "intfloat/multilingual-e5-large"
+                }
+            ],
+            "required": true,
+            "type": "string"
+        },
         "llm-model": {
             "default": "anthropic.claude-3-7-sonnet-20250219-v1:0",
             "description": "LLM model to use",
@@ -2128,6 +2527,7 @@
             "extract-relationships",
             "extract-rows",
             "extract-topics",
+            "extract-with-ontologies",
             "graphql-generation",
             "kg-prompt",
             "question",
@@ -2214,7 +2614,7 @@
             "response-type": "text"
         },
         "template.extract-definitions": {
-            "prompt": "<instructions>\nStudy the following text and derive definitions for any discovered entities.\nDo not provide definitions for entities whose definitions are incomplete\nor unknown.\nOutput relationships in JSON format as an arary of objects with fields:\n- entity: the name of the entity\n- definition: English text which defines the entity\n</instructions>\n\n<text>\n{{text}}\n</text>\n\n<requirements>\nYou will respond only with raw JSON format data. Do not provide\nexplanations. Do not use special characters in the abstract text. The\nabstract will be written as plain text.  Do not add markdown formatting\nor headers or prefixes.  Do not include null or unknown definitions.\n</requirements>",
+            "prompt": "<instructions>\nStudy the following text and derive definitions for any discovered entities.\nDo not provide definitions for entities whose definitions are incomplete\nor unknown.\nOutput relationships in JSON format as an array of objects with fields:\n- entity: the name of the entity\n- definition: English text which defines the entity\n</instructions>\n\n<text>\n{{text}}\n</text>\n\n<requirements>\nYou will respond only with raw JSON format data. Do not provide\nexplanations. Do not use special characters in the abstract text. The\nabstract will be written as plain text.  Do not add markdown formatting\nor headers or prefixes.  Do not include null or unknown definitions.\n</requirements>",
             "response-type": "json",
             "schema": {
                 "items": {
@@ -2236,7 +2636,7 @@
             }
         },
         "template.extract-relationships": {
-            "prompt": "<instructions>\nStudy the following text and derive entity relationships.  For each\nrelationship, derive the subject, predicate and object of the relationship.\nOutput relationships in JSON format as an arary of objects with fields:\n- subject: the subject of the relationship\n- predicate: the predicate\n- object: the object of the relationship\n- object-entity: false if the object is a simple data type: name, value or date.  true if it is an entity.\n</instructions>\n\n<text>\n{{text}}\n</text>\n\n<requirements>\nYou will respond only with raw JSON format data. Do not provide\nexplanations. Do not use special characters in the abstract text. The\nabstract must be written as plain text.  Do not add markdown formatting\nor headers or prefixes.\n</requirements>",
+            "prompt": "<instructions>\nStudy the following text and derive entity relationships.  For each\nrelationship, derive the subject, predicate and object of the relationship.\nOutput relationships in JSON format as an array of objects with fields:\n- subject: the subject of the relationship\n- predicate: the predicate\n- object: the object of the relationship\n- object-entity: false if the object is a simple data type: name, value or date.  true if it is an entity.\n</instructions>\n\n<text>\n{{text}}\n</text>\n\n<requirements>\nYou will respond only with raw JSON format data. Do not provide\nexplanations. Do not use special characters in the abstract text. The\nabstract must be written as plain text.  Do not add markdown formatting\nor headers or prefixes.\n</requirements>",
             "response-type": "json",
             "schema": {
                 "items": {
@@ -2291,8 +2691,12 @@
                 "type": "array"
             }
         },
+        "template.extract-with-ontologies": {
+            "prompt": "You are a knowledge extraction expert. Extract structured triples from text using ONLY the provided ontology elements.\n\n## Ontology Classes:\n\n{% for class_id, class_def in classes.items() %}\n- **{{class_id}}**{% if class_def.subclass_of %} (subclass of {{class_def.subclass_of}}){% endif %}{% if class_def.comment %}: {{class_def.comment}}{% endif %}\n{% endfor %}\n\n## Object Properties (connect entities):\n\n{% for prop_id, prop_def in object_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Datatype Properties (entity attributes):\n\n{% for prop_id, prop_def in datatype_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Text to Analyze:\n\n{{text}}\n\n## Extraction Rules:\n\n1. Only use classes defined above for entity types\n2. Only use properties defined above for relationships and attributes\n3. Respect domain and range constraints where specified\n4. For class instances, use `rdf:type` as the predicate\n5. Include `rdfs:label` for new entities to provide human-readable names\n6. Extract all relevant triples that can be inferred from the text\n7. Use entity URIs or meaningful identifiers as subjects/objects\n\n## Output Format:\n\nReturn ONLY a valid JSON array (no markdown, no code blocks) containing objects with these fields:\n- \"subject\": the subject entity (URI or identifier)\n- \"predicate\": the property (from ontology or rdf:type/rdfs:label)\n- \"object\": the object entity or literal value\n\nImportant: Return raw JSON only, with no markdown formatting, no code blocks, and no backticks.\n\n## Example Output:\n\n[\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"rdf:type\", \"object\": \"Recipe\"},\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"rdfs:label\", \"object\": \"Cornish Pasty\"},\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"has_ingredient\", \"object\": \"ingredient:flour\"},\n  {\"subject\": \"ingredient:flour\", \"predicate\": \"rdf:type\", \"object\": \"Ingredient\"},\n  {\"subject\": \"ingredient:flour\", \"predicate\": \"rdfs:label\", \"object\": \"plain flour\"}\n]\n\nNow extract triples from the text above.\n",
+            "response-type": "json"
+        },
         "template.graphql-generation": {
-            "prompt": "You are a GraphQL query generation expert. Given a natural language question\nand provided database schemas, generate a valid GraphQL query embedded in\nvalid JSON schema.\n\n## Question:\n{{ question }}\n\n## Provided Schemas:\n{% for schema in schemas %}\n**{{ schema.name }}**: {{ schema.description }}\nFields:\n{% for field in schema.fields %}\n- {{ field.name }} ({{ field.type }}){% if field.description %}: {{ field.description }}{% endif\n%}{% if field.primary_key %} [PRIMARY KEY]{% endif %}{% if field.required %} [REQUIRED]{% endif \n%}{% if field.indexed %} [INDEXED]{% endif %}{% if field.enum_values %} [OPTIONS: {{\nfield.enum_values|join(', ') }}]{% endif %}\n{% endfor %}\n\n{% endfor %}\n\n## GraphQL Query Rules:\n1. Use the schema names as GraphQL query fields (e.g., `customers`, `orders`)\n2. Apply filters using the `where` parameter with nested filter objects\n3. Available filter operators per field type:\n   - String fields: `eq`, `contains`, `startsWith`, `endsWith`, `in`, `not`, `not_in`\n   - Integer/Float fields: `eq`, `gt`, `gte`, `lt`, `lte`, `in`, `not`, `not_in`\n4. Use `order_by` for sorting (field name as string)\n5. Use `direction` for sort direction: `ASC` or `DESC`\n6. Use `limit` to restrict number of results\n7. Select specific fields in the query body\n\n## Response Instructions:\n\n1. Analyze the question to identify:\n  - What data to retrieve (which fields to select)\n  - What filters to apply (where conditions)\n  - What sorting is needed (order_by, direction)\n  - How many results (limit)\n2. Generate a GraphQL query that:\n  - Uses only the provided schema names and field names\n  - Applies appropriate filters based on the question\n  - Selects relevant fields for the response\n  - Includes reasonable limits (default 100 if not specified)\n3. If variables are needed, include them in the response\n\n### Response Format:\n\nReturn a JSON object with:\n- \"query\": the GraphQL query string\n- \"variables\": object with any GraphQL variables (empty object if none)\n- \"confidence\": float between 0.0-1.0 indicating confidence in the query\n\n### Example Responses:\n\nExample:\n**Question**: \"Show me customers from California\"\n{\n  \"query\": \"query { customers(where: {state: {eq: \\\"California\\\"}}, limit: 100) { customer_id name email state} }\",\n  \"variables\": {},\n  \"confidence\": 0.92\n}\n\nExample:\n**Question**: \"Top 10 products by price\"\n{\n  \"query\": \"query { products(order_by: \\\"price\\\", direction: DESC, limit: 10) { product_id name price category } }\",\n  \"variables\": {},\n  \"confidence\": 0.88\n}\n\nExample:\n**Question**: \"Recent orders over $100\"\n{\n  \"query\": \"query { orders( where: { total_amount: {gt: 100}, order_date: {gte: \\\"2024-01-01\\\"} }, order_by: \\\"order_date\\\", direction: DESC, limit: 50) { order_id customer_id total_amount order_date status } }\",\n  \"variables\": {},\n  \"confidence\": 0.96\n}\n\n}\n\n",
+            "prompt": "You are a GraphQL query generation expert. Given a natural language question and provided database schemas, generate a valid GraphQL query embedded in valid JSON.\n\n## Question:\n{{ question }}\n\n## Provided Schemas:\n{% for schema in schemas %}\n**{{ schema.name }}**: {{ schema.description }}\nFields:\n{% for field in schema.fields %}- {{ field.name }} ({{ field.type }}){% if field.description %}: {{ field.description }}{% endif %}{% if field.primary_key %} [PRIMARY KEY]{% endif %}{% if field.required %} [REQUIRED]{% endif %}{% if field.indexed %} [INDEXED]{% endif %}{% if field.enum_values %} [OPTIONS: {{ field.enum_values|join(', ') }}]{% endif %}\n{% endfor %}\n{% endfor %}\n\n## GraphQL Query Rules:\n1. Use the schema names as GraphQL query fields (e.g., `customers`, `orders`)\n2. Apply filters using the `where` parameter with nested filter objects\n3. Available filter operators per field type:\n   - String fields: `eq`, `contains`, `startsWith`, `endsWith`, `in`, `not`, `not_in`\n   - Integer/Float fields: `eq`, `gt`, `gte`, `lt`, `lte`, `in`, `not`, `not_in`\n4. Use `order_by` for sorting (field name as string)\n5. Use `direction` for sort direction: `ASC` or `DESC`\n6. Use `limit` to restrict number of results\n7. Select specific fields in the query body\n\n## Task Instructions:\n1. Analyze the question to identify:\n   - What data to retrieve (which fields to select)\n   - What filters to apply (where conditions)\n   - What sorting is needed (order_by, direction)\n   - How many results (limit)\n\n2. Generate a GraphQL query that:\n   - Uses only the provided schema names and field names\n   - Applies appropriate filters based on the question\n   - Selects relevant fields for the response\n   - Includes reasonable limits (default 100 if not specified)\n\n3. If variables are needed, include them in the response\n\n## Output Format:\nReturn ONLY a valid JSON object (no markdown, no code blocks) with these fields:\n- \"query\": the GraphQL query string\n- \"variables\": object with any GraphQL variables (empty object if none)\n- \"confidence\": float between 0.0-1.0 indicating confidence in the query\n\nImportant: Return raw JSON only, with no markdown formatting, no code blocks, and no backticks.\n\n## Examples:\n\nQuestion: \"Show me customers from California\"\n{\"query\": \"query { customers(where: {state: {eq: \\\"California\\\"}}, limit: 100) { customer_id name email state } }\", \"variables\": {}, \"confidence\": 0.92}\n\nQuestion: \"Top 10 products by price\"\n{\"query\": \"query { products(order_by: \\\"price\\\", direction: DESC, limit: 10) { product_id name price category } }\", \"variables\": {}, \"confidence\": 0.88}\n\nQuestion: \"Recent orders over $100\"\n{\"query\": \"query { orders(where: {total_amount: {gt: 100}, order_date: {gte: \\\"2024-01-01\\\"}}, order_by: \\\"order_date\\\", direction: DESC, limit: 50) { order_id customer_id total_amount order_date status } }\", \"variables\": {}, \"confidence\": 0.96}\n\nNow generate the GraphQL query for the question above.\n",
             "response-type": "json",
             "schema": {
                 "additionalProperties": false,

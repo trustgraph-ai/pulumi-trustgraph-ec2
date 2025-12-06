@@ -142,10 +142,11 @@ respectively.
 ## How the config was built
 
 ```
+rm -rf env
 python3 -m venv env
 . env/bin/activate
-pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@5e839db05e9e278374d510c9cdd0c02ade12aabd
-tg-configurator -t 1.4 -v 1.4.19 --platform docker-compose -R > docker-compose.yaml
-tg-configurator -t 1.4 -v 1.4.19 -O > tg-config.json
+pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@8f3b2bb0
+tg-configurator -t 1.6 -v 1.6.5 --platform docker-compose -R > docker-compose.yaml
+tg-configurator -t 1.6 -v 1.6.5 -O > tg-config.json
 ```
 

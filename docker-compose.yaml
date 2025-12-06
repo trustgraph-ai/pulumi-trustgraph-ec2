@@ -14,7 +14,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   api-gateway:
     command:
@@ -37,7 +37,7 @@ services:
           memory: 256M
     environment:
       GATEWAY_SECRET: ${GATEWAY_SECRET}
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     ports:
     - 8088:8088
     restart: on-failure:100
@@ -104,7 +104,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   config-svc:
     command:
@@ -121,7 +121,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   ddg-mcp-server:
     deploy:
@@ -151,7 +151,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   document-rag:
     command:
@@ -170,7 +170,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   embeddings:
     command:
@@ -179,8 +179,6 @@ services:
     - pulsar://pulsar:6650
     - --concurrency
     - '1'
-    - -m
-    - sentence-transformers/all-MiniLM-L6-v2
     - --log-level
     - DEBUG
     deploy:
@@ -191,7 +189,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 400M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   grafana:
     deploy:
@@ -228,7 +226,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   graph-rag:
     command:
@@ -253,7 +251,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   init-trustgraph:
     command:
@@ -270,7 +268,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
     volumes:
     - ./trustgraph:/trustgraph/
@@ -291,7 +289,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   kg-extract-definitions:
     command:
@@ -310,7 +308,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   kg-extract-objects:
     command:
@@ -329,7 +327,26 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    restart: on-failure:100
+  kg-extract-ontology:
+    command:
+    - kg-extract-ontology
+    - -p
+    - pulsar://pulsar:6650
+    - --concurrency
+    - '1'
+    - --log-level
+    - DEBUG
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 300M
+        reservations:
+          cpus: '0.1'
+          memory: 300M
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   kg-extract-relationships:
     command:
@@ -348,7 +365,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   kg-manager:
     command:
@@ -365,7 +382,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   kg-store:
     command:
@@ -382,7 +399,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   librarian:
     command:
@@ -399,7 +416,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   mcp-server:
     command:
@@ -416,7 +433,7 @@ services:
           memory: 256M
     environment:
       MCP_SERVER_SECRET: ${MCP_SERVER_SECRET}
-    image: docker.io/trustgraph/trustgraph-mcp:1.4.19
+    image: docker.io/trustgraph/trustgraph-mcp:1.6.5
     ports:
     - 8000:8000
     restart: on-failure:100
@@ -435,7 +452,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   metering:
     command:
@@ -452,7 +469,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   metering-rag:
     command:
@@ -471,7 +488,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   minio:
     command:
@@ -513,7 +530,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   pdf-decoder:
     command:
@@ -530,7 +547,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   prometheus:
     deploy:
@@ -565,7 +582,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   prompt-rag:
     command:
@@ -586,7 +603,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   pulsar:
     command:
@@ -668,7 +685,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   query-graph-embeddings:
     command:
@@ -687,7 +704,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   query-objects:
     command:
@@ -706,7 +723,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   query-triples:
     command:
@@ -725,7 +742,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   store-doc-embeddings:
     command:
@@ -744,7 +761,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   store-graph-embeddings:
     command:
@@ -763,7 +780,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   store-objects:
     command:
@@ -782,7 +799,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   store-triples:
     command:
@@ -801,7 +818,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   structured-diag:
     command:
@@ -818,7 +835,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 96M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   structured-query:
     command:
@@ -835,7 +852,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.4.19
+    image: docker.io/trustgraph/trustgraph-flow:1.6.5
     restart: on-failure:100
   text-completion:
     command:
@@ -858,7 +875,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    image: docker.io/trustgraph/trustgraph-bedrock:1.4.19
+    image: docker.io/trustgraph/trustgraph-bedrock:1.6.5
     restart: on-failure:100
   text-completion-rag:
     command:
@@ -883,7 +900,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    image: docker.io/trustgraph/trustgraph-bedrock:1.4.19
+    image: docker.io/trustgraph/trustgraph-bedrock:1.6.5
     restart: on-failure:100
   workbench-ui:
     deploy:
@@ -894,7 +911,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/workbench-ui:1.2.4
+    image: docker.io/trustgraph/workbench-ui:1.4.1
     ports:
     - 8888:8888
     restart: on-failure:100
