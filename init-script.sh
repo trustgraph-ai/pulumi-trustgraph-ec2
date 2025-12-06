@@ -43,6 +43,8 @@ aws s3 cp "s3://${bucket}/${deploy_key}" output.zip
 unzip -q output.zip
 rm output.zip
 
+chmod -R a+r ${trustgraph}/deploy
+
 chcon -Rt svirt_sandbox_file_t ${trustgraph}/deploy
 
 podman-compose -f docker-compose.yaml pull
