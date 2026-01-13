@@ -1,4 +1,15 @@
 {
+    "collection": {
+        "trustgraph:default": {
+            "collection": "default",
+            "description": "Default collection",
+            "name": "Default Collection",
+            "tags": [
+                "default"
+            ],
+            "user": "default-user"
+        }
+    },
     "flow-classes": {
         "document-rag": {
             "class": {},
@@ -2030,8 +2041,8 @@
                 "chunk-overlap": "50",
                 "chunk-size": "2000",
                 "embeddings-model": "sentence-transformers/all-MiniLM-L6-v2",
-                "llm-model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
-                "llm-rag-model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+                "llm-model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
+                "llm-rag-model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
                 "llm-rag-temperature": "0.300",
                 "llm-temperature": "0.300"
             }
@@ -2239,14 +2250,14 @@
         },
         "text-completion": {
             "default": {
-                "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+                "model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
                 "request": "non-persistent://tg/request/text-completion:default",
                 "response": "non-persistent://tg/response/text-completion:default"
             }
         },
         "text-completion-rag": {
             "default": {
-                "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+                "model": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
                 "request": "non-persistent://tg/request/text-completion-rag:default",
                 "response": "non-persistent://tg/response/text-completion-rag:default"
             }
@@ -2491,12 +2502,60 @@
             "type": "string"
         },
         "llm-model": {
-            "default": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+            "default": "global.anthropic.claude-sonnet-4-5-20250929-v1:0",
             "description": "LLM model to use",
             "enum": [
                 {
-                    "description": "Claude 3.7 Sonnet",
-                    "id": "anthropic.claude-3-7-sonnet-20250219-v1:0"
+                    "description": "Claude Sonnet 4.5 (smartest for complex agents and coding)",
+                    "id": "global.anthropic.claude-sonnet-4-5-20250929-v1:0"
+                },
+                {
+                    "description": "Claude Opus 4.5 (maximum intelligence)",
+                    "id": "global.anthropic.claude-opus-4-5-20251101-v1:0"
+                },
+                {
+                    "description": "Claude Haiku 4.5 (fastest with near-frontier intelligence)",
+                    "id": "global.anthropic.claude-haiku-4-5-20251001-v1:0"
+                },
+                {
+                    "description": "Claude Opus 4.1 (specialized reasoning)",
+                    "id": "global.anthropic.claude-opus-4-1-20250805-v1:0"
+                },
+                {
+                    "description": "Claude Sonnet 4.0",
+                    "id": "global.anthropic.claude-sonnet-4-20250514-v1:0"
+                },
+                {
+                    "description": "Claude Opus 4.0",
+                    "id": "global.anthropic.claude-opus-4-20250514-v1:0"
+                },
+                {
+                    "description": "Claude 3.5 Haiku",
+                    "id": "anthropic.claude-3-5-haiku-20241022-v1:0"
+                },
+                {
+                    "description": "Claude 3 Haiku",
+                    "id": "anthropic.claude-3-haiku-20240307-v1:0"
+                },
+                {
+                    "description": "Llama 3.1 405B Instruct",
+                    "id": "meta.llama3-1-405b-instruct-v1:0"
+                },
+                {
+                    "description": "Llama 3.1 70B Instruct",
+                    "id": "meta.llama3-1-70b-instruct-v1:0"
+                },
+                {
+                    "description": "Llama 3.1 8B Instruct",
+                    "id": "meta.llama3-1-8b-instruct-v1:0"
+                },
+                {
+                    "description": "Mistral Large",
+                    "id": "mistral.mistral-large-2407-v1:0"
+                },
+                {
+                    "description": "Mixtral 8x7B Instruct",
+                    "id": "mistral.mixtral-8x7b-instruct-v0:1"
                 }
             ],
             "required": true,
@@ -2692,7 +2751,7 @@
             }
         },
         "template.extract-with-ontologies": {
-            "prompt": "You are a knowledge extraction expert. Extract structured triples from text using ONLY the provided ontology elements.\n\n## Ontology Classes:\n\n{% for class_id, class_def in classes.items() %}\n- **{{class_id}}**{% if class_def.subclass_of %} (subclass of {{class_def.subclass_of}}){% endif %}{% if class_def.comment %}: {{class_def.comment}}{% endif %}\n{% endfor %}\n\n## Object Properties (connect entities):\n\n{% for prop_id, prop_def in object_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Datatype Properties (entity attributes):\n\n{% for prop_id, prop_def in datatype_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Text to Analyze:\n\n{{text}}\n\n## Extraction Rules:\n\n1. Only use classes defined above for entity types\n2. Only use properties defined above for relationships and attributes\n3. Respect domain and range constraints where specified\n4. For class instances, use `rdf:type` as the predicate\n5. Include `rdfs:label` for new entities to provide human-readable names\n6. Extract all relevant triples that can be inferred from the text\n7. Use entity URIs or meaningful identifiers as subjects/objects\n\n## Output Format:\n\nReturn ONLY a valid JSON array (no markdown, no code blocks) containing objects with these fields:\n- \"subject\": the subject entity (URI or identifier)\n- \"predicate\": the property (from ontology or rdf:type/rdfs:label)\n- \"object\": the object entity or literal value\n\nImportant: Return raw JSON only, with no markdown formatting, no code blocks, and no backticks.\n\n## Example Output:\n\n[\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"rdf:type\", \"object\": \"Recipe\"},\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"rdfs:label\", \"object\": \"Cornish Pasty\"},\n  {\"subject\": \"recipe:cornish-pasty\", \"predicate\": \"has_ingredient\", \"object\": \"ingredient:flour\"},\n  {\"subject\": \"ingredient:flour\", \"predicate\": \"rdf:type\", \"object\": \"Ingredient\"},\n  {\"subject\": \"ingredient:flour\", \"predicate\": \"rdfs:label\", \"object\": \"plain flour\"}\n]\n\nNow extract triples from the text above.\n",
+            "prompt": "You are a knowledge extraction expert. Your task is to find entities, relationships, and attributes in text based on a provided schema.\n\n## Entity Types\n\nThese are the types of entities you should look for:\n\n{% for class_id, class_def in classes.items() %}\n- **{{class_id}}**{% if class_def.subclass_of %} (subclass of {{class_def.subclass_of}}){% endif %}{% if class_def.comment %}: {{class_def.comment}}{% endif %}\n{% endfor %}\n\n## Relationships\n\nThese relationships connect entities to other entities:\n\n{% for prop_id, prop_def in object_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Attributes\n\nThese attributes describe entity properties (text, numbers, etc.):\n\n{% for prop_id, prop_def in datatype_properties.items() %}\n- **{{prop_id}}**{% if prop_def.domain and prop_def.range %} ({{prop_def.domain}} \u2192 {{prop_def.range}}){% endif %}{% if prop_def.comment %}: {{prop_def.comment}}{% endif %}\n{% endfor %}\n\n## Text to Analyze\n\n{{text}}\n\n## Your Task\n\nExtract the following from the text above:\n\n1. **Entities**: Things mentioned in the text and their types\n2. **Relationships**: How entities relate to each other\n3. **Attributes**: Properties of entities (like quantities, descriptions, etc.)\n\n## Output Format\n\nReturn ONLY valid JSON (no markdown, no code blocks, no backticks) with this structure:\n\n```\n{\n  \"entities\": [\n    {\n      \"entity\": \"entity name as it appears in text\",\n      \"type\": \"EntityType\"\n    }\n  ],\n  \"relationships\": [\n    {\n      \"subject\": \"subject entity name\",\n      \"subject-type\": \"SubjectType\",\n      \"relation\": \"relationship_name\",\n      \"object\": \"object entity name\",\n      \"object-type\": \"ObjectType\"\n    }\n  ],\n  \"attributes\": [\n    {\n      \"entity\": \"entity name\",\n      \"entity-type\": \"EntityType\",\n      \"attribute\": \"attribute_name\",\n      \"value\": \"literal value\"\n    }\n  ]\n}\n```\n\n## Important Rules\n\n1. **Entity names**: Use the exact text as it appears (e.g., \"Cornish pasty\", \"beef\")\n2. **Types**: Use the EXACT type identifiers from the schema above (e.g., \"fo/Recipe\", \"fo/Food\")\n3. **Relationships**: Use the EXACT relationship names from the schema (e.g., \"fo/has_ingredient\")\n4. **Attributes**: Use the EXACT attribute names from the schema (e.g., \"fo/serves\")\n5. **Type disambiguation**: If the same entity name appears with different types, list it separately for each type\n6. **All arrays can be empty** if nothing is found\n\n## Example\n\nInput text: \"Cornish pasty is a savory pastry filled with beef and potatoes. This recipe serves 4 people.\"\n\nExpected output:\n{\n  \"entities\": [\n    {\n      \"entity\": \"Cornish pasty\",\n      \"type\": \"fo/Recipe\"\n    },\n    {\n      \"entity\": \"beef\",\n      \"type\": \"fo/Food\"\n    },\n    {\n      \"entity\": \"potatoes\",\n      \"type\": \"fo/Food\"\n    }\n  ],\n  \"relationships\": [\n    {\n      \"subject\": \"Cornish pasty\",\n      \"subject-type\": \"fo/Recipe\",\n      \"relation\": \"fo/has_ingredient\",\n      \"object\": \"beef\",\n      \"object-type\": \"fo/Food\"\n    },\n    {\n      \"subject\": \"Cornish pasty\",\n      \"subject-type\": \"fo/Recipe\",\n      \"relation\": \"fo/has_ingredient\",\n      \"object\": \"potatoes\",\n      \"object-type\": \"fo/Food\"\n    }\n  ],\n  \"attributes\": [\n    {\n      \"entity\": \"Cornish pasty\",\n      \"entity-type\": \"fo/Recipe\",\n      \"attribute\": \"fo/serves\",\n      \"value\": \"4 people\"\n    }\n  ]\n}\n\nNow extract entities, relationships, and attributes from the text above.\n",
             "response-type": "json"
         },
         "template.graphql-generation": {
