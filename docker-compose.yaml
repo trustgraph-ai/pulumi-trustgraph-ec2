@@ -14,7 +14,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   api-gateway:
     command:
@@ -31,13 +31,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
+          memory: 512M
         reservations:
           cpus: '0.1'
-          memory: 256M
+          memory: 512M
     environment:
       GATEWAY_SECRET: ${GATEWAY_SECRET}
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     ports:
     - 8088:8088
     restart: on-failure:100
@@ -55,7 +55,7 @@ services:
           cpus: '0.1'
           memory: 1024M
     environment:
-      BOOKIE_MEM: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
+      BOOKIE_MEM: -Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
       advertisedAddress: bookie
       bookieId: bookie
       clusterName: cluster-a
@@ -104,7 +104,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   config-svc:
     command:
@@ -121,7 +121,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   ddg-mcp-server:
     deploy:
@@ -151,7 +151,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   document-rag:
     command:
@@ -170,7 +170,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   embeddings:
     command:
@@ -189,8 +189,109 @@ services:
         reservations:
           cpus: '0.5'
           memory: 400M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
+  garage:
+    command:
+    - /garage
+    - -c
+    - /etc/garage/garage.toml
+    - server
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    environment:
+      RUST_LOG: garage=info
+    image: docker.io/dxflrs/garage:v2.1.0
+    ports:
+    - 3900:3900
+    - 3901:3901
+    - 3902:3902
+    - 3903:3903
+    - 3904:3904
+    restart: on-failure:100
+    volumes:
+    - ./garage:/etc/garage/
+    - garage-meta:/var/lib/garage/meta
+    - garage-data:/var/lib/garage/data
+  garage-init:
+    command:
+    - sh
+    - -c
+    - "set -e\n\n# Install required tools\necho \"Installing curl, jq and downloading\
+      \ garage CLI...\"\napk add --no-cache curl jq\n\n# Download garage binary (v2.1.0)\
+      \ for remote management\ncurl -fsSL \"https://garagehq.deuxfleurs.fr/_releases/v2.1.0/x86_64-unknown-linux-musl/garage\"\
+      \ \\\n    -o /usr/local/bin/garage\nchmod +x /usr/local/bin/garage\n\necho \"\
+      Waiting for Garage daemon to be ready...\"\nMAX_ATTEMPTS=60\nATTEMPT=0\n# Wait\
+      \ for /health to respond (even 503 is fine - means daemon is up)\nuntil curl\
+      \ -s http://garage:3903/health >/dev/null 2>&1; do\n    ATTEMPT=$$((ATTEMPT+1))\n\
+      \    if [ $$ATTEMPT -ge $$MAX_ATTEMPTS ]; then\n        echo \"ERROR: Garage\
+      \ failed to become ready after $${MAX_ATTEMPTS} attempts\"\n        exit 1\n\
+      \    fi\n    echo \"Attempt $${ATTEMPT}/$${MAX_ATTEMPTS}: Garage not ready,\
+      \ retrying in 2s...\"\n    sleep 2\ndone\necho \"Garage daemon is ready.\"\n\
+      \n# Get the node ID via v2 Admin API\necho \"Getting Garage node ID via Admin\
+      \ API...\"\ncurl -s -H \"Authorization: Bearer $${GARAGE_ADMIN_TOKEN}\" \\\n\
+      \    \"http://garage:3903/v2/GetNodeInfo?node=self\" > /tmp/garage-node-info.json\n\
+      \n# Extract node ID from response (the key in success map is the node ID)\n\
+      NODE_ID=$$(jq -r '.success | to_entries[0].value.nodeId' /tmp/garage-node-info.json)\n\
+      echo \"Node ID: $${NODE_ID}\"\n\nif [ -z \"$$NODE_ID\" ] || [ \"$$NODE_ID\"\
+      \ = \"null\" ]; then\n    echo \"ERROR: Failed to retrieve node ID\"\n    exit\
+      \ 1\nfi\n\n# ===== LAYOUT MANAGEMENT VIA REMOTE RPC =====\n# Use garage CLI\
+      \ with -h and -s flags to connect remotely\n# -h requires format: <node-id>@<host>:<port>\n\
+      # -s provides the RPC secret\n\n# Construct full RPC identifier\nRPC_HOST=\"\
+      $${NODE_ID}@garage:3901\"\necho \"RPC Host: $${RPC_HOST}\"\n\n# Check current\
+      \ layout to see if node is already assigned (idempotent)\necho \"Checking current\
+      \ cluster layout...\"\nLAYOUT_OUTPUT=$$(garage -h \"$${RPC_HOST}\" -s \"$${GARAGE_RPC_SECRET}\"\
+      \ layout show 2>&1)\n\n# Check if node already has a role assigned\n# Layout\
+      \ output shows abbreviated node ID (first 16 chars)\nNODE_ID_SHORT=\"$${NODE_ID:0:16}\"\
+      \nif echo \"$$LAYOUT_OUTPUT\" | grep -q \"$$NODE_ID_SHORT\"; then\n    echo\
+      \ \"Node $${NODE_ID_SHORT}... already assigned in layout, skipping.\"\nelse\n\
+      \    echo \"Assigning node to cluster layout...\"\n    # Assign node to zone\
+      \ dc1 with configured capacity\n    garage -h \"$${RPC_HOST}\" -s \"$${GARAGE_RPC_SECRET}\"\
+      \ \\\n        layout assign $${NODE_ID} -z dc1 -c $${GARAGE_DATA_SIZE}\n\n \
+      \   echo \"Applying layout configuration...\"\n    # Get current staged version\
+      \ and apply\n    garage -h \"$${RPC_HOST}\" -s \"$${GARAGE_RPC_SECRET}\" \\\n\
+      \        layout apply --version 1\n\n    echo \"Layout configured successfully.\"\
+      \n    # Wait for layout to stabilize\n    sleep 5\nfi\n\n# ===== KEY MANAGEMENT\
+      \ VIA REMOTE RPC =====\n\n# Check if key already exists (idempotent)\n# GARAGE_ACCESS_KEY\
+      \ is already a valid Garage Key ID (GK + 24 hex chars)\nif garage -h \"$${RPC_HOST}\"\
+      \ -s \"$${GARAGE_RPC_SECRET}\" key info \"$${GARAGE_ACCESS_KEY}\" >/dev/null\
+      \ 2>&1; then\n    echo \"Access key $${GARAGE_ACCESS_KEY} already exists, skipping\
+      \ creation.\"\nelse\n    echo \"Importing S3 access key: $${GARAGE_ACCESS_KEY}\"\
+      \n\n    # Import key with the provided credentials (both already in valid Garage\
+      \ format)\n    # GARAGE_ACCESS_KEY = Key ID (GK + 24 hex chars)\n    # GARAGE_SECRET_KEY\
+      \ = Secret (64 hex chars)\n    garage -h \"$${RPC_HOST}\" -s \"$${GARAGE_RPC_SECRET}\"\
+      \ \\\n        key import \"$${GARAGE_ACCESS_KEY}\" \"$${GARAGE_SECRET_KEY}\"\
+      \ --yes\n\n    echo \"Access key imported successfully.\"\nfi\n\n# Grant permissions\
+      \ to the key\necho \"Granting create-bucket permission to key...\"\ngarage -h\
+      \ \"$${RPC_HOST}\" -s \"$${GARAGE_RPC_SECRET}\" \\\n    key allow --create-bucket\
+      \ \"$${GARAGE_ACCESS_KEY}\"\n\necho \"\"\necho \"Garage initialization complete!\"\
+      \necho \"S3 Endpoint: http://garage:3900\"\necho \"Region: $${GARAGE_REGION}\"\
+      \nexit 0\n"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    environment:
+      GARAGE_ACCESS_KEY: GK000000000000000000000001
+      GARAGE_ADMIN_TOKEN: batts-rockhearted-unpartially
+      GARAGE_DATA_SIZE: 5G
+      GARAGE_REGION: garage
+      GARAGE_RPC_SECRET: bbba746a9e289bad64a9e7a36a4299dac8d6e0b8cc2a6c2937fe756df4492008
+      GARAGE_SECRET_KEY: b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427
+    image: docker.io/alpine:3.23.2
+    restart: on-failure:100
+    volumes:
+    - ./garage:/etc/garage/
   grafana:
     deploy:
       resources:
@@ -202,7 +303,7 @@ services:
           memory: 256M
     environment:
       GF_ORG_NAME: trustgraph.ai
-    image: docker.io/grafana/grafana:12.1.1
+    image: docker.io/grafana/grafana:12.3.0
     ports:
     - 3000:3000
     restart: on-failure:100
@@ -226,7 +327,7 @@ services:
         reservations:
           cpus: '0.5'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   graph-rag:
     command:
@@ -251,7 +352,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   init-trustgraph:
     command:
@@ -268,7 +369,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
     volumes:
     - ./trustgraph:/trustgraph/
@@ -289,7 +390,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-extract-definitions:
     command:
@@ -308,7 +409,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-extract-objects:
     command:
@@ -327,7 +428,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-extract-ontology:
     command:
@@ -346,7 +447,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 300M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-extract-relationships:
     command:
@@ -365,7 +466,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-manager:
     command:
@@ -382,7 +483,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   kg-store:
     command:
@@ -399,7 +500,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   librarian:
     command:
@@ -408,6 +509,14 @@ services:
     - pulsar://pulsar:6650
     - --log-level
     - DEBUG
+    - --object-store-endpoint
+    - garage:3900
+    - --object-store-access-key
+    - GK000000000000000000000001
+    - --object-store-secret-key
+    - b171f00be9be4c32c734f4c05fe64c527a8ab5eb823b376cfa8c2531f70fc427
+    - --object-store-region
+    - garage
     deploy:
       resources:
         limits:
@@ -416,8 +525,24 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
+  loki:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 256M
+    image: docker.io/grafana/loki:3.6.2
+    ports:
+    - 3100:3100
+    restart: on-failure:100
+    volumes:
+    - ./loki:/etc/loki/
+    - loki-data:/loki
   mcp-server:
     command:
     - mcp-server
@@ -433,7 +558,7 @@ services:
           memory: 256M
     environment:
       MCP_SERVER_SECRET: ${MCP_SERVER_SECRET}
-    image: docker.io/trustgraph/trustgraph-mcp:1.6.5
+    image: docker.io/trustgraph/trustgraph-mcp:1.8.12
     ports:
     - 8000:8000
     restart: on-failure:100
@@ -452,7 +577,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   metering:
     command:
@@ -469,7 +594,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   metering-rag:
     command:
@@ -488,33 +613,8 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
-  minio:
-    command:
-    - minio
-    - server
-    - /minio_data
-    - --console-address
-    - :9001
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 128M
-        reservations:
-          cpus: '0.25'
-          memory: 128M
-    environment:
-      MINIO_ROOT_PASSWORD: minioadmin
-      MINIO_ROOT_USER: minioadmin
-    image: docker.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
-    ports:
-    - 9000:9000
-    - 9001:9001
-    restart: on-failure:100
-    volumes:
-    - minio-data:/minio_data
   nlp-query:
     command:
     - nlp-query
@@ -530,7 +630,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   pdf-decoder:
     command:
@@ -547,7 +647,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   prometheus:
     deploy:
@@ -558,7 +658,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/prom/prometheus:v3.5.0
+    image: docker.io/prom/prometheus:v3.8.0
     ports:
     - 9090:9090
     restart: on-failure:100
@@ -582,7 +682,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   prompt-rag:
     command:
@@ -603,7 +703,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   pulsar:
     command:
@@ -619,7 +719,7 @@ services:
           cpus: '0.1'
           memory: 800M
     environment:
-      PULSAR_MEM: -Xms512m -Xmx512m -XX:MaxDirectMemorySize=256m
+      PULSAR_MEM: -Xms384m -Xmx384m -XX:MaxDirectMemorySize=384m
       advertisedAddress: pulsar
       advertisedListeners: external:pulsar://pulsar:6650,localhost:pulsar://localhost:6650
       clusterName: cluster-a
@@ -644,12 +744,12 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 512M
+          memory: 256M
         reservations:
           cpus: '0.05'
-          memory: 512M
+          memory: 256M
     environment:
-      PULSAR_MEM: -Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
+      PULSAR_MEM: -Xms128m -Xmx128m -XX:MaxDirectMemorySize=128m
     image: docker.io/apachepulsar/pulsar:4.1.0
     restart: on-failure:100
   qdrant:
@@ -685,7 +785,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   query-graph-embeddings:
     command:
@@ -704,7 +804,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   query-objects:
     command:
@@ -723,7 +823,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   query-triples:
     command:
@@ -742,7 +842,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 512M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   store-doc-embeddings:
     command:
@@ -761,7 +861,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   store-graph-embeddings:
     command:
@@ -780,7 +880,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   store-objects:
     command:
@@ -799,7 +899,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   store-triples:
     command:
@@ -818,7 +918,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   structured-diag:
     command:
@@ -835,7 +935,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 96M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   structured-query:
     command:
@@ -852,7 +952,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 128M
-    image: docker.io/trustgraph/trustgraph-flow:1.6.5
+    image: docker.io/trustgraph/trustgraph-flow:1.8.12
     restart: on-failure:100
   text-completion:
     command:
@@ -875,7 +975,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    image: docker.io/trustgraph/trustgraph-bedrock:1.6.5
+    image: docker.io/trustgraph/trustgraph-bedrock:1.8.12
     restart: on-failure:100
   text-completion-rag:
     command:
@@ -900,7 +1000,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-    image: docker.io/trustgraph/trustgraph-bedrock:1.6.5
+    image: docker.io/trustgraph/trustgraph-bedrock:1.8.12
     restart: on-failure:100
   workbench-ui:
     deploy:
@@ -911,7 +1011,7 @@ services:
         reservations:
           cpus: '0.1'
           memory: 256M
-    image: docker.io/trustgraph/workbench-ui:1.4.1
+    image: docker.io/trustgraph/workbench-ui:1.4.4
     ports:
     - 8888:8888
     restart: on-failure:100
@@ -925,10 +1025,10 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 400M
+          memory: 512M
         reservations:
           cpus: '0.05'
-          memory: 400M
+          memory: 512M
     environment:
       PULSAR_MEM: -Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m
       metadataStoreUrl: zk:zookeeper:2181
@@ -944,8 +1044,10 @@ services:
 volumes:
   bookie: {}
   cassandra: {}
+  garage-data: {}
+  garage-meta: {}
   grafana-storage: {}
-  minio-data: {}
+  loki-data: {}
   prometheus-data: {}
   qdrant: {}
   zookeeper: {}
