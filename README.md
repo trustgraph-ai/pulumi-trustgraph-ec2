@@ -146,7 +146,6 @@ rm -rf env
 python3 -m venv env
 . env/bin/activate
 pip install --upgrade git+https://github.com/trustgraph-ai/trustgraph-templates@master
-tg-configurator -t 1.8 -v 1.8.12 --platform docker-compose -R > docker-compose.yaml
-tg-configurator -t 1.8 -v 1.8.12 -O > tg-config.json
+tg-build-deployment -t 2.1 -v 2.1.28 --platform docker-compose -R > docker-compose.pyaml
 ```
 

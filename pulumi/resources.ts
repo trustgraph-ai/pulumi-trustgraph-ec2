@@ -10,7 +10,7 @@ import { prefix, tags, region } from './config';
 
 ////////////////////////////////////////////////////////////////////////////
 
-const deployAsset = new pulumi.asset.FileAsset("../output.zip");
+const deployAsset = new pulumi.asset.FileAsset("../deploy.zip");
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ export const bucket = new aws.s3.BucketV2(
 export const deployObject = new aws.s3.BucketObjectv2(
     "deploy-resource",
     {
-	key: "output.zip",
+	key: "deploy.zip",
         bucket: bucket.id,
         source: deployAsset,
     },
